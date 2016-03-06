@@ -1,0 +1,10 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="tipo_grande">20dp</dimen>
+    <dimen name="tipo_reducido">20dp</dimen>
+    <dimen name="width_but">60dp</dimen>
+    <dimen name="height_but">60dp</dimen>
+    <dimen name="circle_radio">15dp</dimen>
+</resources>

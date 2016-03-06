@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Conecta4_CristinaKasner</string>
+    <string name="c1">1</string>
+    <string name="c2">2</string>
+    <string name="c3">3</string>
+    <string name="c4">4</string>
+    <string name="c5">5</string>
+    <string name="c6">6</string>
+    <string name = "gameOverTitle">El Juego ha terminado!!</string>
+    <string name = "noValido">Movimiento no válido!!</string>
+    <string name = "Tablas"> EMPATE</string>
+    <string name = "Error"> ERROR!!</string>
+</resources>
