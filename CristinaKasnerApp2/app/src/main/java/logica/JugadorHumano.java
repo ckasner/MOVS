@@ -25,6 +25,7 @@ public class JugadorHumano implements Jugador{
 
                 break;
             case Evento.EVENTO_TURNO:
+                break;
 
         }
     }

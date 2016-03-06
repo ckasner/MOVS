@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -47,7 +48,7 @@ public class TableroConecta4View extends View {
         circlePaint.setStrokeWidth(2);
 
         backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        backgroundPaint.setColor(Color.BLACK);
+        backgroundPaint.setColor(getResources().getColor(R.color.colorTab));
     }
 
     @Override
@@ -96,7 +97,8 @@ public class TableroConecta4View extends View {
         for (int i = 0; i < tab.FILAS; i++) {
             centerY = heightOfTile * (1 + 2 * (tab.FILAS - i - 1)) / 2f;
             for (int j = 0; j < tab.COLS; j++) {
-                // paint.setColor(getResources().getColor(R.color.color_error));
+               // Toast.makeText(this.getContext(), tab.tablero[i][j], Toast.LENGTH_LONG).show();
+                // paint.setColor(getResources().getColor(R.color.colorVacio));
                 if (tab.tablero[i][j] == tab.VACIO) {
                     paint.setColor(getResources().getColor(R.color.colorVacio));
                 } else if (tab.tablero[i][j] == tab.JHUMANO) {
@@ -127,7 +129,7 @@ public class TableroConecta4View extends View {
 
     private int xToIndex (float x){
         TableroConecta4 tab = (TableroConecta4) game.getTablero();
-        return x < tab.FILAS*widthOfTile ? (int)(x/widthOfTile) : -1;
+        return x < tab.COLS*widthOfTile ? (int)(x/widthOfTile) : -1;
     }
 
     public boolean onTouchEvent(MotionEvent event) {
@@ -149,16 +151,20 @@ public class TableroConecta4View extends View {
 
                 xIndex = xToIndex(x);
                 yIndex = yToIndex(y);
+                String pulsa = new String();
 
-                if (xIndex < 0 || yIndex < 0)
+
+
+                if ( xIndex < 0)
                     return false;
 
                 if (tab4.isFinished()) {
+                    //tab4.estado = 2; //FINALIZADA
                     Toast.makeText(this.getContext(), R.string.gameOverTitle, Toast.LENGTH_LONG).show();
                     return false;
                 }
 
-                Movimiento movimiento = new MovimientoConecta4(yIndex);
+                Movimiento movimiento = new MovimientoConecta4(xIndex);
                 if (!tab4.esValido(movimiento)) {
                     Toast.makeText(this.getContext(), R.string.noValido, Toast.LENGTH_SHORT).show();
                     return false;
@@ -167,8 +173,8 @@ public class TableroConecta4View extends View {
 
                 else {
 
-                    listener.onPlay(yIndex);
-
+                    listener.onPlay(yIndex,xIndex);
+                    Log.i("TableroConecta4View", pulsa + xIndex + "," + yIndex);
                     return super.onTouchEvent(event);
 
                 }

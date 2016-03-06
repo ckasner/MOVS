@@ -13,9 +13,10 @@ public class TableroConecta4 extends Tablero {
     public int[][] tablero;
     public int VACIO = 0;
     public int JHUMANO = 1;
-    public int JALEAT = 1;
+    public int JALEAT = 2;
     public int FILAS = 6;
     public int COLS = 7;
+
 
 
     public TableroConecta4() {
@@ -243,5 +244,9 @@ public class TableroConecta4 extends Tablero {
 
     public boolean isFinished(){
         return this.estado != EN_CURSO;
+    }
+
+    public void setEstado(int est){
+        this.estado = est;
     }
 }

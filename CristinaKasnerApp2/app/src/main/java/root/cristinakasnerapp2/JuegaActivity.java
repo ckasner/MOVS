@@ -1,8 +1,13 @@
 package root.cristinakasnerapp2;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +25,7 @@ import logica.TableroConecta4;
 import vista.OnPlayListener;
 import vista.TableroConecta4View;
 
-public class JuegaActivity extends AppCompatActivity implements OnPlayListener,Jugador{
+public class JuegaActivity extends AppCompatActivity implements OnPlayListener,Jugador {
 
 
 
@@ -31,32 +36,25 @@ public class JuegaActivity extends AppCompatActivity implements OnPlayListener,J
         TextView infotext;
 
 
-
-
-
-
-
-
-
-
         //Partida game = new Partida();
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_juega);
-            infotext = (TextView)findViewById(R.id.infotext);
+
             Jugador jugadorAleatorio = new JugadorAleatorio("Máquina");
 
             jugadores = new ArrayList<Jugador>();
-            jugadores.add(this);
+            jugadores.add(JuegaActivity.this);
             jugadores.add(jugadorAleatorio);
             tableroView = (TableroConecta4View)findViewById(R.id.board);
+
+            //infotext.setTypeface(monospace);
             tableroView.setOnPlayListener(this);
             tablero = new TableroConecta4();
             game = new Partida(tablero, jugadores);
             tableroView.setPartida(game);
-
             if(tablero.getEstado()== Tablero.EN_CURSO){
                 game.comenzar(tablero, jugadores);
 
@@ -64,9 +62,16 @@ public class JuegaActivity extends AppCompatActivity implements OnPlayListener,J
 
             if(tablero.getEstado()==Tablero.TABLAS){
                 infotext.setText(R.string.Tablas);
+                return;
             }
             if(tablero.getEstado()==Tablero.FINALIZADA) {
+
+
+
+
+
                 infotext.setText("Gana: "+ jugadores.get(tablero.getTurno()).getNombre());
+                return;
             }
 
         }
@@ -82,9 +87,14 @@ public class JuegaActivity extends AppCompatActivity implements OnPlayListener,J
         }
 
         @Override
-        public void onPlay(int columna) {
+        public void onPlay(int fila,int columna) {
+
+
             try {
                 game.realizaAccion(new AccionMover(this, new MovimientoConecta4(columna)));
+               /* if(tablero.compruebaGanar(fila, columna)){
+                    tablero.setEstado(2);//FINALIZADA
+                }*/
             } catch (ExcepcionJuego excepcionJuego) {
                 Toast.makeText(tableroView.getContext(), R.string.Error, Toast.LENGTH_LONG).show();
                 return;
@@ -103,17 +113,47 @@ public class JuegaActivity extends AppCompatActivity implements OnPlayListener,J
 
                     tableroView.invalidate();
                     break;
+                case Evento.EVENTO_FIN:
+
+                    tableroView.invalidate();
+                    LayoutInflater layoutInflater = LayoutInflater.from(tableroView.getContext());
+                    View dialogView = layoutInflater.inflate(R.layout.fin_activity, null);
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(tableroView.getContext());
+
+                    // set prompts.xml to be the layout file of the alertdialog builder
+                    alertDialogBuilder.setView(dialogView);
+
+
+
+                    // setup a dialog window
+                    // TODO Poner las strings en strings.xml
+                    alertDialogBuilder
+                            .setMessage("Enhorabuena "+ jugadores.get(tablero.getTurno()).getNombre()+"!! Has Ganado!\n¿Quieres volver a jugar?")
+                            .setCancelable(false)
+                            .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // get user input and set it to result
+                                    Intent intent = new Intent(JuegaActivity.this.getApplicationContext(), JuegaActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            })
+                            .setNegativeButton("No",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    // create an alert dialog
+                    AlertDialog alertD = alertDialogBuilder.create();
+                    alertD.show();
+
 
                 default:
                     break;
             }
 
         }
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("tablero",tablero.tableroToString());
-        return;
-    }
+
     }
 
